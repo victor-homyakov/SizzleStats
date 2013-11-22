@@ -55,7 +55,7 @@ Usage of SizzleStats plugin:
         "[role=holder]                                                                              5    0"
         "a.ui-state-active                                                                          5    0"
 
-    - note most used selector ".tau-extension-board-tooltip-inner" on the top: 7536 times and 515 milliseconds
+    - note most used selector ".board-tooltip-inner" on the top: 7536 times and 515 milliseconds
     - note very inefficient selector
       '.user-sub a:contains("Switch to version 3.0.3"), .user-sub a:contains("Try version 3.0.3")': 111ms for 8 invocations
 
