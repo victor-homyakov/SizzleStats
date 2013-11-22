@@ -71,3 +71,5 @@ Usage of SizzleStats plugin:
     time took more than `MIN_TIME_TO_SHOW` milliseconds.
 
     If a selector was executed longer than `MIN_TIME_TO_WARN` milliseconds then warning will be shown in console.
+
+Look at http://victor-homyakov.github.io/SizzleStats/ for bookmarklet add additional info.
