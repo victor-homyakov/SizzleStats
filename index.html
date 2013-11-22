@@ -2,16 +2,27 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Sizzle Stats demo</title>
+    <title>Sizzle Stats</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://rawgithub.com/victor-homyakov/SizzleStats/master/jquery.sizzlestats.js"></script>
 </head>
 <body>
+<h1>Sizzle Stats</h1>
+
+<h2>Usage</h2>
 <ol>
     <li>Open Development Tools</li>
     <li>Type
         <pre>$.SizzleStats()</pre>
     </li>
 </ol>
+
+<h2>Bookmarklet (requires jQuery)</h2>
+
+Drag this link to your bookmarks or favorites bar
+
+<a href="javascript:(function(d,$){if(!$){alert('Sizzle Stats measures performance of jQuery Sizzle\nTherefore this bookmarklet requires jQuery')}else if(!$.SizzleStats){var js=d.createElement('script');js.src='//rawgithub.com/victor-homyakov/SizzleStats/master/jquery.sizzlestats.js?'+Math.floor((+new Date())/86400000);d.getElementsByTagName('head')[0].appendChild(js)}}(document,window.jQuery))">
+    Sizzle Stats
+</a>
 </body>
 </html>
