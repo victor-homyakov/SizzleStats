@@ -1,4 +1,8 @@
 /*global console, jQuery*/
+/**
+ * jQuery plugin to collect and show in console performance stats of Sizzle selector.
+ * https://github.com/victor-homyakov/SizzleStats
+ */
 (function($) {
 
     var data = {};
