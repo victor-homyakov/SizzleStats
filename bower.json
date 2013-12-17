@@ -1,9 +1,10 @@
 {
     "name": "sizzlestats",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "main": "jquery.sizzlestats.js",
     "ignore": [
-        "README.md"
+        "README.md",
+        "sizzlestats.jquery.json"
     ],
     "dependencies": {
         "jquery": ">=1.8"
