@@ -3,7 +3,7 @@
     "title": "Sizzle Stats",
     "description": "Collect and show in console performance stats of Sizzle selector.",
     "keywords": ["Sizzle", "performance"],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": {
         "name": "Victor Homyakov",
         "email": "vkhomyackov@gmail.com",

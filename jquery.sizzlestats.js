@@ -1,4 +1,4 @@
-/*global console, jQuery*/
+/*global console, performance, jQuery*/
 /**
  * jQuery plugin to collect and show in console performance stats of Sizzle selector.
  * https://github.com/victor-homyakov/SizzleStats
@@ -14,6 +14,12 @@
         return spaces + str;
     }
 
+    var getTimestamp = (window.performance && window.performance.now) ? function() {
+        return window.performance.now();
+    } : function() {
+        return new Date().getTime();
+    };
+
     $.SizzleStats = function() {
         var arr = [];
         $.each(data, function(k, v) {
@@ -27,7 +33,7 @@
         });
 
         if (console.table) {
-            // Firebug and Chrome
+            // Firebug, Chrome, IE11
             console.table(arr);
         } else {
             var cPad = ('' + arr[0].count).length,
@@ -46,7 +52,7 @@
     $.SizzleStats.options = {
         MIN_COUNT_TO_SHOW: 5,
         MIN_TIME_TO_SHOW: 10,
-        MIN_TIME_TO_WARN: 10
+        MIN_TIME_TO_WARN: 17
     };
 
     // Wrap `$.find()`
@@ -54,13 +60,13 @@
     $.find = function(selector) {
         var time;
         if (selector && typeof selector === 'string') {
-            time = new Date().getTime();
+            time = getTimestamp();
         }
 
         var result = find.apply($, arguments);
 
         if (time) {
-            time = new Date().getTime() - time;
+            time = getTimestamp() - time;
             var stat = data[selector] || {name: selector, count: 0, time: 0};
             stat.count++;
             stat.time += time;
@@ -68,20 +74,18 @@
 
             if (time > $.SizzleStats.options.MIN_TIME_TO_WARN) {
                 // Warn about long running selectors
-                console.warn('Selector took ' + time + 'ms:', selector);
+                console.warn('Selector took ' + time + 'ms: ' + selector);
             }
         }
 
         return result;
     };
 
-    // Copy all original properties to wrapper
+    // Copy all original properties to wrapper, e.g. $.find.matches and $.find.matchesSelector
     for (var prop in find) {
         if (!(prop in $.find)) {
             $.find[prop] = find[prop];
         }
     }
-    //$.find.matches = find.matches;
-    //$.find.matchesSelector = find.matchesSelector;
 
 }(jQuery));
