@@ -57,13 +57,14 @@
 
     // Wrap `$.find()`
     var find = $.find;
-    $.find = function(selector) {
+    $.find = function(selector, context, results, seed) {
         var time;
         if (selector && typeof selector === 'string') {
             time = getTimestamp();
         }
 
-        var result = find.apply($, arguments);
+        //var result = find.apply($, arguments);
+        var result = find.call($, selector, context, results, seed);
 
         if (time) {
             time = getTimestamp() - time;
