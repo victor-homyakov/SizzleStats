@@ -24,25 +24,44 @@
         var arr = [];
         $.each(data, function(k, v) {
             if (v.count >= $.SizzleStats.options.MIN_COUNT_TO_SHOW || v.time >= $.SizzleStats.options.MIN_TIME_TO_SHOW) {
-                arr.push(v);
+                arr.push({
+                    selector: v.selector,
+                    avgTime: parseFloat((v.time / v.count).toFixed(3)),
+                    time: parseFloat(v.time.toFixed(3)),
+                    count: v.count
+                });
             }
         });
 
         arr.sort(function(a, b) {
-            return b.count - a.count;
+            return b.avgTime - a.avgTime;
         });
 
         if (console.table) {
             // Firebug, Chrome, IE11
             console.table(arr);
         } else {
-            var cPad = ('' + arr[0].count).length,
-                tPad = ('' + arr[0].time).length;
-            for (var i = 0; i < arr.length; i++) {
-                var entry = arr[i];
+            var i, aPad = 0, tPad = 0, cPad = 0, entry;
+            arr.unshift({
+                selector: 'selector',
+                avgTime: 'avgTime',
+                time: 'time',
+                count: 'count'
+            });
+            for (i = 0; i < arr.length; i++) {
+                entry = arr[i];
+                aPad = Math.max(aPad, ('' + entry.avgTime).length);
+                tPad = Math.max(tPad, ('' + entry.time).length);
+                cPad = Math.max(cPad, ('' + entry.count).length);
+            }
+
+            for (i = 0; i < arr.length; i++) {
+                entry = arr[i];
                 // Extra spaces for IE and single string (no extra quotes) for FF
-                console.log(padding(entry.count, cPad) + ' ' + padding(entry.time, tPad) + ' ' + entry.name);
-                //console.log(entry.count, ' ', entry.time, ' ', entry.name);
+                console.log(padding(entry.avgTime, aPad) + ' ' +
+                    padding(entry.time, tPad) + ' ' +
+                    padding(entry.count, cPad) + ' ' +
+                    entry.selector);
             }
         }
     };
@@ -68,10 +87,10 @@
 
         if (time) {
             time = getTimestamp() - time;
-            var stat = data[selector] || {name: selector, count: 0, time: 0};
-            stat.count++;
-            stat.time += time;
-            data[selector] = stat;
+            var selectorStats = data[selector] || {selector: selector, count: 0, time: 0};
+            selectorStats.count++;
+            selectorStats.time += time;
+            data[selector] = selectorStats;
 
             if (time > $.SizzleStats.options.MIN_TIME_TO_WARN) {
                 // Warn about long running selectors
