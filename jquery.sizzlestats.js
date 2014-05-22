@@ -1,4 +1,5 @@
-/*global console, performance, jQuery*/
+/*global console, jQuery*/
+/*eslint no-console:0*/
 /**
  * jQuery plugin to collect and show in console performance stats of Sizzle selector.
  * https://github.com/victor-homyakov/SizzleStats
@@ -22,8 +23,9 @@
 
     $.SizzleStats = function() {
         var arr = [];
+        var options = $.SizzleStats.options;
         $.each(data, function(k, v) {
-            if (v.count >= $.SizzleStats.options.MIN_COUNT_TO_SHOW || v.time >= $.SizzleStats.options.MIN_TIME_TO_SHOW) {
+            if (v.count >= options.MIN_COUNT_TO_SHOW || v.time >= options.MIN_TIME_TO_SHOW) {
                 arr.push({
                     selector: v.selector,
                     avgTime: parseFloat((v.time / v.count).toFixed(3)),
@@ -92,7 +94,7 @@
             selectorStats.time += time;
             data[selector] = selectorStats;
 
-            if (time > $.SizzleStats.options.MIN_TIME_TO_WARN) {
+            if (window.console && time > $.SizzleStats.options.MIN_TIME_TO_WARN) {
                 // Warn about long running selectors
                 console.warn('Selector took ' + time + 'ms: ' + selector);
             }
@@ -104,6 +106,7 @@
     // Copy all original properties to wrapper, e.g. $.find.matches and $.find.matchesSelector
     for (var prop in find) {
         if (!(prop in $.find)) {
+            //noinspection JSUnfilteredForInLoop
             $.find[prop] = find[prop];
         }
     }
