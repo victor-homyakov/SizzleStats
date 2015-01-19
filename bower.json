@@ -1,6 +1,6 @@
 {
     "name": "sizzlestats",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "main": "jquery.sizzlestats.js",
     "ignore": [
         "README.md",
