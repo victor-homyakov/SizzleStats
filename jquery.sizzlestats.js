@@ -76,6 +76,18 @@
         MIN_TIME_TO_WARN: 17
     };
 
+    function updateStats(selector, time) {
+        var selectorStats = data[selector] || {selector: selector, count: 0, time: 0};
+        selectorStats.count++;
+        selectorStats.time += time;
+        data[selector] = selectorStats;
+
+        if (time > $.SizzleStats.options.MIN_TIME_TO_WARN && window.console) {
+            // Warn about long running selectors
+            console.warn('Selector took ' + time + 'ms: ' + selector);
+        }
+    }
+
     // Wrap `$.find()`
     var find = $.find;
     $.find = function(selector, context, results, seed) {
@@ -89,19 +101,34 @@
 
         if (time) {
             time = getTimestamp() - time;
-            var selectorStats = data[selector] || {selector: selector, count: 0, time: 0};
-            selectorStats.count++;
-            selectorStats.time += time;
-            data[selector] = selectorStats;
-
-            if (window.console && time > $.SizzleStats.options.MIN_TIME_TO_WARN) {
-                // Warn about long running selectors
-                console.warn('Selector took ' + time + 'ms: ' + selector);
-            }
+            updateStats(selector, time);
         }
 
         return result;
     };
+
+    function wrap(orig, name) {
+        return function(selector) {
+            var time;
+            if (selector && typeof selector === 'string') {
+                time = getTimestamp();
+            }
+
+            var result = orig.apply(this, arguments);
+
+            if (time) {
+                time = getTimestamp() - time;
+                updateStats(name + ' ' + selector, time);
+            }
+
+            return result;
+        };
+    }
+
+    $.fn.extend({
+        closest: wrap($.fn.closest, 'closest'),
+        parents: wrap($.fn.parents, 'parents')
+    });
 
     // Copy all original properties to wrapper, e.g. $.find.matches and $.find.matchesSelector
     for (var prop in find) {
